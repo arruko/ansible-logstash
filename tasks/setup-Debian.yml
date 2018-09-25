@@ -1,0 +1,34 @@
+---
+- name: Debian | add apt-transport-https
+  apt:
+    name: apt-transport-https
+    state: present
+
+- name: Debian | add Elasticsearch apt key.
+  apt_key:
+    url: "{{ logstash_repo_key }}"
+    state: present
+
+- name: Debian | add Logstash repository.
+  apt_repository:
+    repo: "{{ logstash_deb_repo }}"
+    state: present
+
+- name: Debian | check if Logstash is already installed.
+  stat: path=/etc/init.d/logstash
+  register: logstash_installed
+
+- name: Debian | update apt cache if repository just added.
+  apt: update_cache=yes
+  when: logstash_installed.stat.exists == false
+
+- name: Debian | install Logstash.
+  apt: pkg=logstash state=present
+
+- name: Debian | add Logstash user to adm group (Debian).
+  user:
+    name: logstash
+    group: logstash
+    groups: adm
+  when: ansible_os_family == "Debian"
+  notify: restart logstash

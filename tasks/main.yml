@@ -1,0 +1,26 @@
+---
+- name: Test distribution
+  assert:
+    that: >
+      ansible_os_family == 'RedHat' or
+      ansible_os_family == 'Debian'
+
+- name: Include OS Specific setup tasks
+  include: setup-{{ ansible_os_family }}.yml
+
+- name: Checking To Ensure Node Meets Minimum Specs
+  pause:
+    prompt: >
+         "Node Does Not Meet Minimum Recommend Memory Requirements of
+         {{ logstash_min_memory_required }}MB"
+    seconds: 10
+  when: ansible_memtotal_mb < logstash_min_memory_required
+
+- include: config.yml
+- include: plugins.yml
+
+- name: Ensure Logstash is started and enabled on boot.
+  service:
+    name: logstash
+    state: started
+    enabled: "{{ logstash_enabled_on_boot }}"

@@ -1,0 +1,14 @@
+---
+- name: RHEL | add Elasticsearch GPG key.
+  rpm_key:
+    key: http://packages.elasticsearch.org/GPG-KEY-elasticsearch
+    state: present
+
+- name: RHEL | add Logstash repository.
+  copy:
+    src: logstash.repo
+    dest: /etc/yum.repos.d/logstash.repo
+    mode: 0644
+
+- name: RHEL | install Logstash.
+  yum: pkg=logstash state=installed

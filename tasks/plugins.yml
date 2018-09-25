@@ -1,0 +1,23 @@
+---
+- name: plugins | Setting Logstash plugins facts
+  set_fact:
+    logstash_plugin_bin: '/usr/share/logstash/bin/logstash-plugin'
+    logstash_bin: '/usr/share/logstash/bin/logstash'
+  when: logstash_major_ver == '5.x'
+
+- name: plugins | collecting installed plugins
+  command: "{{ logstash_plugin_bin }} list"
+  become: true
+  register: "logstash_plugins_installed"
+  changed_when: false
+
+- name: plugins | Currently Installed Plugins
+  debug: var=logstash_plugins_installed.stdout_lines
+  changed_when: false
+
+- name: plugins | installing logstash plugins
+  shell: "{{ logstash_plugin_cmd_vars }} {{ logstash_plugin_bin }} install {{ item }}"
+  become: true
+  notify: "restart logstash"
+  with_items: '{{ logstash_install_plugins }}'
+  when: item not in logstash_plugins_installed.stdout
