@@ -1,4 +1,10 @@
 ---
+- name: Test distribution
+  assert:
+    that: >
+      ansible_os_family == 'RedHat' or
+      ansible_os_family == 'Debian'
+
 - name: Include OS Specific setup tasks
   include: setup-{{ ansible_os_family }}.yml
 
