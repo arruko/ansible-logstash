@@ -8,5 +8,6 @@ logstash_monitor_local_syslog: true
 logstash_enabled_on_boot: yes
 logstash_min_memory_required: 2048
 logstash_elasticsearch_hosts: "{{ groups['elasticsearch'] | map('extract', hostvars, ['ansible_host']) | list }}"
+logstash_elasticsearch_inventory_group_name: elasticsearch
 logstash_install_plugins:
   - logstash-input-beats
