@@ -1,5 +1,6 @@
 input {
   beats {
+    host => "{{ ansible_host }}"
     port => {{ logstash_listen_port_beats }}
   }
 }
