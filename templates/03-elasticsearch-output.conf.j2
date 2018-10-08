@@ -3,6 +3,5 @@ output {
     hosts => {{ logstash_elasticsearch_hosts | to_json }}
     index => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
     document_type => "%{[@metadata][beat]}-%{+YYYY.MM.dd}"
-    flush_size => '100'
   }
 }
