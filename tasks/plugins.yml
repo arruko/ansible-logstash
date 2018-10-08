@@ -3,7 +3,6 @@
   set_fact:
     logstash_plugin_bin: '/usr/share/logstash/bin/logstash-plugin'
     logstash_bin: '/usr/share/logstash/bin/logstash'
-  when: logstash_major_ver == '5.x'
 
 - name: plugins | collecting installed plugins
   command: "{{ logstash_plugin_bin }} list"
